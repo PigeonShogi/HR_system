@@ -1,6 +1,6 @@
 CREATE TABLE "employees" (
   "id" serial PRIMARY KEY,
-  "Identity_Id" serial NOT NULL DEFAULT 1,
+  "Identity_Id" serial NOT NULL,
   "code" varchar NOT NULL,
   "full_name" varchar NOT NULL,
   "password" varchar NOT NULL DEFAULT 'pa@ss123word',
@@ -17,14 +17,14 @@ CREATE TABLE "punches" (
   "id" bigserial PRIMARY KEY,
   "Employee_Id" serial NOT NULL,
   "working_day" timestamptz NOT NULL DEFAULT (now()),
-  "working_hours" tinyint NOT NULL DEFAULT 0,
-  "Status_Id" tinyint NOT NULL DEFAULT 0,
+  "working_hours" smallint NOT NULL DEFAULT 0,
+  "Status_Id" smallint NOT NULL DEFAULT 0,
   "created_at" timestamptz NOT NULL DEFAULT (now()),
   "updated_at" timestamptz NOT NULL DEFAULT (now())
 );
 
 CREATE TABLE "statuses" (
-  "id" tinyint PRIMARY KEY,
+  "id" smallint PRIMARY KEY,
   "name" varchar
 );
 
