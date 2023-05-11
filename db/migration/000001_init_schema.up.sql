@@ -1,7 +1,7 @@
 CREATE TABLE "employees" (
   "id" serial PRIMARY KEY,
   "identity_id" serial NOT NULL,
-  "code" varchar NOT NULL,
+  "code" varchar UNIQUE NOT NULL,
   "full_name" varchar NOT NULL,
   "password" varchar NOT NULL DEFAULT 'pa@ss123word',
   "created_at" timestamptz NOT NULL DEFAULT (now()),
@@ -10,7 +10,7 @@ CREATE TABLE "employees" (
 
 CREATE TABLE "identities" (
   "id" serial PRIMARY KEY,
-  "name" varchar NOT NULL
+  "name" varchar UNIQUE NOT NULL
 );
 
 CREATE TABLE "punches" (
@@ -25,12 +25,12 @@ CREATE TABLE "punches" (
 
 CREATE TABLE "statuses" (
   "id" smallint PRIMARY KEY,
-  "name" varchar
+  "name" varchar UNIQUE NOT NULL
 );
 
 CREATE TABLE "holidays" (
   "id" serial PRIMARY KEY,
-  "date" timestamptz
+  "date" timestamptz UNIQUE NOT NULL
 );
 
 CREATE TABLE "entries" (
