@@ -1,3 +1,10 @@
+# 2023/5/11
+## 新增 sqlc 相關資料夾及檔案
+ $ touch sqlc.yaml
+ $ sqlc generate 
+ $ go mod init github.com/PigeonShogi/HR_system
+ $ go mod tidy
+
 # 2023/5/10
 ## 新增 Makefile
 ## 安裝 golang-migrate 的 migrate CLI

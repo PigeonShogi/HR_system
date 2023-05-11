@@ -5,7 +5,6 @@
 package db
 
 import (
-	"database/sql"
 	"time"
 )
 
@@ -28,8 +27,8 @@ type Entry struct {
 }
 
 type Holiday struct {
-	ID   int32        `json:"id"`
-	Date sql.NullTime `json:"date"`
+	ID   int32     `json:"id"`
+	Date time.Time `json:"date"`
 }
 
 type Identity struct {
@@ -48,8 +47,8 @@ type Punch struct {
 }
 
 type Status struct {
-	ID   int16          `json:"id"`
-	Name sql.NullString `json:"name"`
+	ID   int16  `json:"id"`
+	Name string `json:"name"`
 }
 
 type Transfer struct {
