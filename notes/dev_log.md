@@ -1,5 +1,7 @@
 # 2023/5/12
 新增資料庫連線測試檔
+新增測試檔 identity_test.go
+新增測試檔 employee_test.go
 
 # 2023/5/11
 ## 新增 sqlc 相關資料夾及檔案

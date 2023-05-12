@@ -11,9 +11,9 @@ import (
 
 const createEmployee = `-- name: CreateEmployee :one
 INSERT INTO employees (
-  identity_id, code, full_name, password
+  identity_id, code, full_name
 ) VALUES (
-  $1, $2, $3, $4
+  $1, $2, $3
 )
 RETURNING id, identity_id, code, full_name, password, created_at, updated_at
 `
@@ -22,16 +22,10 @@ type CreateEmployeeParams struct {
 	IdentityID int32  `json:"identity_id"`
 	Code       string `json:"code"`
 	FullName   string `json:"full_name"`
-	Password   string `json:"password"`
 }
 
 func (q *Queries) CreateEmployee(ctx context.Context, arg CreateEmployeeParams) (Employee, error) {
-	row := q.db.QueryRowContext(ctx, createEmployee,
-		arg.IdentityID,
-		arg.Code,
-		arg.FullName,
-		arg.Password,
-	)
+	row := q.db.QueryRowContext(ctx, createEmployee, arg.IdentityID, arg.Code, arg.FullName)
 	var i Employee
 	err := row.Scan(
 		&i.ID,

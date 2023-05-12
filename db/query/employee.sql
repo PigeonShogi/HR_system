@@ -1,8 +1,8 @@
 -- name: CreateEmployee :one
 INSERT INTO employees (
-  identity_id, code, full_name, password
+  identity_id, code, full_name
 ) VALUES (
-  $1, $2, $3, $4
+  $1, $2, $3
 )
 RETURNING *;
 
