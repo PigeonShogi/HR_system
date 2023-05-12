@@ -11,7 +11,7 @@ import (
 
 const getEmployeeFromIdentities = `-- name: GetEmployeeFromIdentities :one
 SELECT id, name FROM identities
-WHERE name = 'HR-Admin' LIMIT 1
+WHERE name = 'employee' LIMIT 1
 `
 
 func (q *Queries) GetEmployeeFromIdentities(ctx context.Context) (Identity, error) {
