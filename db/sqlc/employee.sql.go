@@ -15,7 +15,7 @@ INSERT INTO employees (
 ) VALUES (
   $1, $2, $3
 )
-RETURNING id, identity_id, code, full_name, password, created_at, updated_at
+RETURNING id, identity_id, code, full_name, password, stock, created_at, updated_at
 `
 
 type CreateEmployeeParams struct {
@@ -33,6 +33,7 @@ func (q *Queries) CreateEmployee(ctx context.Context, arg CreateEmployeeParams) 
 		&i.Code,
 		&i.FullName,
 		&i.Password,
+		&i.Stock,
 		&i.CreatedAt,
 		&i.UpdatedAt,
 	)
@@ -40,7 +41,7 @@ func (q *Queries) CreateEmployee(ctx context.Context, arg CreateEmployeeParams) 
 }
 
 const listEmployees = `-- name: ListEmployees :many
-SELECT id, identity_id, code, full_name, password, created_at, updated_at FROM employees
+SELECT id, identity_id, code, full_name, password, stock, created_at, updated_at FROM employees
 ORDER BY code
 LIMIT $1
 OFFSET $2
@@ -66,6 +67,7 @@ func (q *Queries) ListEmployees(ctx context.Context, arg ListEmployeesParams) ([
 			&i.Code,
 			&i.FullName,
 			&i.Password,
+			&i.Stock,
 			&i.CreatedAt,
 			&i.UpdatedAt,
 		); err != nil {
