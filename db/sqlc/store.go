@@ -46,8 +46,8 @@ func (store *Store) execTx(ctx context.Context, fn func(*Queries) error) error {
 
 // TransferTxParams 包含股票轉移交易所需輸入的參數
 type TransferTxParams struct {
-	FromEmployeeID int64 `json:"from_employee_id"`
-	ToEmployeeID   int64 `json:"to_employee_id"`
+	FromEmployeeID int32 `json:"from_employee_id"`
+	ToEmployeeID   int32 `json:"to_employee_id"`
 	Amount         int64 `json:"amount"`
 }
 
