@@ -9,6 +9,7 @@ import (
 	"database/sql"
 )
 
+// type DB, type Tx 都可實現 DBTX 所定義的函式
 type DBTX interface {
 	ExecContext(context.Context, string, ...interface{}) (sql.Result, error)
 	PrepareContext(context.Context, string) (*sql.Stmt, error)

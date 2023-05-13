@@ -7,6 +7,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+// 測試能否在 employees 資料表建立新資料
 func TestCreateEmployee(t *testing.T) {
 	identityEmployee, _ := testQueries.GetEmployeeFromIdentities(context.Background())
 	identityHrAdmin, _ := testQueries.GetHrAdminFromIdentities(context.Background())
@@ -38,6 +39,7 @@ func TestCreateEmployee(t *testing.T) {
 	require.Equal(t, hrAdmin.FullName, hrAdminArg.FullName)
 }
 
+// 測試能否找出 employees 資料表的資料
 func TestListEmployees(t *testing.T) {
 	args := ListEmployeesParams{
 		Limit:  10,
