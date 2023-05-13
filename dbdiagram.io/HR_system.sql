@@ -4,6 +4,7 @@ CREATE TABLE "employees" (
   "code" varchar UNIQUE NOT NULL,
   "full_name" varchar NOT NULL,
   "password" varchar NOT NULL DEFAULT 'pa@ss123word',
+  "stock" bigint NOT NULL DEFAULT 0,
   "created_at" timestamptz NOT NULL DEFAULT (now()),
   "updated_at" timestamptz NOT NULL DEFAULT (now())
 );

@@ -1,1 +1,0 @@
-DELETE FROM identities WHERE name = 'HR-Admin' OR name = 'employee';
