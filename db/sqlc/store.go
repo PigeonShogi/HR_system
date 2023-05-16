@@ -94,28 +94,18 @@ func (store *Store) TransferTx(ctx context.Context, arg TransferTxParams) (Trans
 			return err
 		}
 
-		// get account -> update its stocks
-		employee1, err := q.GetEmployeeForUpdate(ctx, arg.FromEmployeeID)
-		if err != nil {
-			return err
-		}
-
-		result.FromEmployee, err = q.UpdateEmployeeWithStock(ctx, UpdateEmployeeWithStockParams{
-			ID:    arg.FromEmployeeID,
-			Stock: employee1.Stock - arg.Amount,
+		// update stocks
+		result.FromEmployee, err = q.AddEmployeeStock(ctx, AddEmployeeStockParams{
+			ID:     arg.FromEmployeeID,
+			Amount: -arg.Amount,
 		})
 		if err != nil {
 			return err
 		}
 
-		employee2, err := q.GetEmployeeForUpdate(ctx, arg.ToEmployeeID)
-		if err != nil {
-			return err
-		}
-
-		result.ToEmployee, err = q.UpdateEmployeeWithStock(ctx, UpdateEmployeeWithStockParams{
-			ID:    arg.ToEmployeeID,
-			Stock: employee2.Stock + arg.Amount,
+		result.ToEmployee, err = q.AddEmployeeStock(ctx, AddEmployeeStockParams{
+			ID:     arg.ToEmployeeID,
+			Amount: arg.Amount,
 		})
 		if err != nil {
 			return err
