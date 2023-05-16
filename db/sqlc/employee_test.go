@@ -14,14 +14,15 @@ func TestCreateEmployee(t *testing.T) {
 
 	employeeArg := CreateEmployeeParams{
 		IdentityID: identityEmployee.ID,
-		Code:       "G2023050003",
-		FullName:   "林小明",
+		// code 始於 S、姓名後加註 (seed) 以表示該記錄為種子資料
+		Code:     "S2023050003",
+		FullName: "林小明(seed)",
 	}
 
 	hrAdminArg := CreateEmployeeParams{
 		IdentityID: identityHrAdmin.ID,
-		Code:       "G2023050004",
-		FullName:   "林怡君",
+		Code:       "S2023050004",
+		FullName:   "林怡君(seed)",
 	}
 
 	employee, err := testQueries.CreateEmployee(context.Background(), employeeArg)
