@@ -30,3 +30,9 @@ UPDATE employees
 SET stock = $2
 WHERE id = $1
 RETURNING *;
+
+-- name: AddEmployeeStock :one
+UPDATE employees
+SET stock = stock + sqlc.arg(amount)
+WHERE id = sqlc.arg(id)
+RETURNING *;

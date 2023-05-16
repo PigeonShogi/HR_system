@@ -9,6 +9,34 @@ import (
 	"context"
 )
 
+const addEmployeeStock = `-- name: AddEmployeeStock :one
+UPDATE employees
+SET stock = stock + $1
+WHERE id = $2
+RETURNING id, identity_id, code, full_name, password, stock, created_at, updated_at
+`
+
+type AddEmployeeStockParams struct {
+	Amount int64 `json:"amount"`
+	ID     int32 `json:"id"`
+}
+
+func (q *Queries) AddEmployeeStock(ctx context.Context, arg AddEmployeeStockParams) (Employee, error) {
+	row := q.db.QueryRowContext(ctx, addEmployeeStock, arg.Amount, arg.ID)
+	var i Employee
+	err := row.Scan(
+		&i.ID,
+		&i.IdentityID,
+		&i.Code,
+		&i.FullName,
+		&i.Password,
+		&i.Stock,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return i, err
+}
+
 const createEmployee = `-- name: CreateEmployee :one
 INSERT INTO employees (
   identity_id, code, full_name
