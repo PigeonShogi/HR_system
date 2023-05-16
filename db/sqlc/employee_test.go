@@ -40,6 +40,10 @@ func TestCreateEmployee(t *testing.T) {
 	require.Equal(t, hrAdmin.Code, hrAdminArg.Code)
 	require.Equal(t, hrAdmin.IdentityID, hrAdminArg.IdentityID)
 	require.Equal(t, hrAdmin.FullName, hrAdminArg.FullName)
+
+	// 以上測試若沒有出錯，就刪除本次測試產出的 employees 記錄
+	testQueries.DeleteEmployeeById(context.Background(), employee.ID)
+	testQueries.DeleteEmployeeById(context.Background(), hrAdmin.ID)
 }
 
 // 測試能否找出 employees 資料表的資料

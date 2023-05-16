@@ -95,24 +95,44 @@ func (store *Store) TransferTx(ctx context.Context, arg TransferTxParams) (Trans
 		}
 
 		// update stocks
-		result.FromEmployee, err = q.AddEmployeeStock(ctx, AddEmployeeStockParams{
-			ID:     arg.FromEmployeeID,
-			Amount: -arg.Amount,
-		})
-		if err != nil {
-			return err
-		}
-
-		result.ToEmployee, err = q.AddEmployeeStock(ctx, AddEmployeeStockParams{
-			ID:     arg.ToEmployeeID,
-			Amount: arg.Amount,
-		})
-		if err != nil {
-			return err
+		// 根據 ID 大小變更資料庫操作順序，避免 deadlock 發生。
+		if arg.FromEmployeeID < arg.ToEmployeeID {
+			result.FromEmployee, result.ToEmployee, _ =
+				addStock(ctx, q, arg.FromEmployeeID, arg.ToEmployeeID, -arg.Amount, arg.Amount)
+		} else {
+			result.ToEmployee, result.FromEmployee, _ =
+				addStock(ctx, q, arg.ToEmployeeID, arg.FromEmployeeID, arg.Amount, -arg.Amount)
 		}
 
 		return nil
 	})
 
 	return result, err
+}
+
+func addStock(
+	ctx context.Context,
+	q *Queries,
+	employeeID1 int32,
+	employeeID2 int32,
+	amount1 int64,
+	amount2 int64,
+) (employee1 Employee, employee2 Employee, err error) {
+	employee1, err = q.AddEmployeeStock(ctx, AddEmployeeStockParams{
+		ID:     employeeID1,
+		Amount: amount1,
+	})
+	if err != nil {
+		return
+	}
+
+	employee2, err = q.AddEmployeeStock(ctx, AddEmployeeStockParams{
+		ID:     employeeID2,
+		Amount: amount2,
+	})
+	if err != nil {
+		return
+	}
+
+	return
 }

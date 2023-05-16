@@ -126,3 +126,61 @@ func TestTransferTx(t *testing.T) {
 	require.Equal(t, employee0.Stock-int64(n)*amount, updatedEmployee0.Stock)
 	require.Equal(t, employee1.Stock+int64(n)*amount, updatedEmployee1.Stock)
 }
+
+// 測試多筆交易是否導致資料庫發生 deadlock：employee1 給 employee2 股票五次，
+// 然後 employee2 給 employee1 股票五次
+func TestTransferTxDeadlock(t *testing.T) {
+	store := NewStore(testDB)
+
+	employees, err := testQueries.ListEmployees(context.Background(), listEmployeesParams)
+	if err != nil {
+		fmt.Println(err)
+	}
+	employee0 := employees[0]
+	employee1 := employees[1]
+
+	fmt.Println(">> before:", employee0.Stock, employee1.Stock)
+
+	// 並行 n 個交易，預設五次（次數不宜太低，否則可能偵測不到 deadlock 等漏洞）
+	n := 10
+	amount := int64(1000)
+	errs := make(chan error)
+
+	for i := 0; i < n; i++ {
+		fromEmployeeID := employee0.ID
+		toEmployeeID := employee1.ID
+
+		if i%2 == 1 {
+			fromEmployeeID = employee1.ID
+			toEmployeeID = employee0.ID
+		}
+
+		go func() {
+			ctx := context.Background()
+			_, err := store.TransferTx(ctx, TransferTxParams{
+				FromEmployeeID: int32(fromEmployeeID),
+				ToEmployeeID:   int32(toEmployeeID),
+				Amount:         amount,
+			})
+
+			errs <- err
+		}()
+	}
+
+	// check results
+	for i := 0; i < n; i++ {
+		err := <-errs
+		require.NoError(t, err)
+	}
+
+	// 檢查最終更新的 stock
+	updatedEmployee0, err := testQueries.GetEmployee(context.Background(), employee0.ID)
+	require.NoError(t, err)
+
+	updatedEmployee1, err := testQueries.GetEmployee(context.Background(), employee1.ID)
+	require.NoError(t, err)
+
+	fmt.Println(">> after:", updatedEmployee0.Stock, updatedEmployee1.Stock)
+	require.Equal(t, employee0.Stock, updatedEmployee0.Stock)
+	require.Equal(t, employee1.Stock, updatedEmployee1.Stock)
+}
