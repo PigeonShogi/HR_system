@@ -71,9 +71,31 @@ func (q *Queries) GetEmployee(ctx context.Context, id int32) (Employee, error) {
 	return i, err
 }
 
+const getEmployeeForUpdate = `-- name: GetEmployeeForUpdate :one
+SELECT id, identity_id, code, full_name, password, stock, created_at, updated_at FROM employees
+WHERE id = $1 LIMIT 1
+FOR NO KEY UPDATE
+`
+
+func (q *Queries) GetEmployeeForUpdate(ctx context.Context, id int32) (Employee, error) {
+	row := q.db.QueryRowContext(ctx, getEmployeeForUpdate, id)
+	var i Employee
+	err := row.Scan(
+		&i.ID,
+		&i.IdentityID,
+		&i.Code,
+		&i.FullName,
+		&i.Password,
+		&i.Stock,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return i, err
+}
+
 const listEmployees = `-- name: ListEmployees :many
 SELECT id, identity_id, code, full_name, password, stock, created_at, updated_at FROM employees
-ORDER BY code
+ORDER BY code ASC
 LIMIT $1
 OFFSET $2
 `

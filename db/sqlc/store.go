@@ -60,6 +60,8 @@ type TransferTxResult struct {
 	ToEntry      Entry    `json:"to_entry"`
 }
 
+var txKey = struct{}{}
+
 // TransferTx 用於將持股從某員工轉移至另一員工。
 // 此函式會使用單筆資料庫交易建立股票轉移記錄、員工持股增減記錄、員工持股餘額。
 func (store *Store) TransferTx(ctx context.Context, arg TransferTxParams) (TransferTxResult, error) {
@@ -68,6 +70,9 @@ func (store *Store) TransferTx(ctx context.Context, arg TransferTxParams) (Trans
 	err := store.execTx(ctx, func(q *Queries) error {
 		var err error
 
+		txName := ctx.Value(txKey)
+
+		fmt.Println(txName, "create transfer")
 		result.Transfer, err = q.CreateTransfer(ctx, CreateTransferParams{
 			FromEmployeeID: arg.FromEmployeeID,
 			ToEmployeeID:   arg.ToEmployeeID,
@@ -78,6 +83,7 @@ func (store *Store) TransferTx(ctx context.Context, arg TransferTxParams) (Trans
 			return err
 		}
 
+		fmt.Println(txName, "create entry 1")
 		result.FromEntry, err = q.CreateEntry(ctx, CreateEntryParams{
 			EmployeeID: arg.FromEmployeeID,
 			Amount:     -arg.Amount,
@@ -86,6 +92,7 @@ func (store *Store) TransferTx(ctx context.Context, arg TransferTxParams) (Trans
 			return err
 		}
 
+		fmt.Println(txName, "create entry 2")
 		result.ToEntry, err = q.CreateEntry(ctx, CreateEntryParams{
 			EmployeeID: arg.ToEmployeeID,
 			Amount:     arg.Amount,
@@ -94,7 +101,36 @@ func (store *Store) TransferTx(ctx context.Context, arg TransferTxParams) (Trans
 			return err
 		}
 
-		// TODO: update employee's stocks
+		// get account -> update its stocks
+		fmt.Println(txName, "get employee 1")
+		employee1, err := q.GetEmployeeForUpdate(ctx, arg.FromEmployeeID)
+		if err != nil {
+			return err
+		}
+
+		fmt.Println(txName, "update employee 1")
+		result.FromEmployee, err = q.UpdateEmployeeWithStock(ctx, UpdateEmployeeWithStockParams{
+			ID:    arg.FromEmployeeID,
+			Stock: employee1.Stock - arg.Amount,
+		})
+		if err != nil {
+			return err
+		}
+
+		fmt.Println(txName, "get employee 2")
+		employee2, err := q.GetEmployeeForUpdate(ctx, arg.ToEmployeeID)
+		if err != nil {
+			return err
+		}
+
+		fmt.Println(txName, "update employee 2")
+		result.ToEmployee, err = q.UpdateEmployeeWithStock(ctx, UpdateEmployeeWithStockParams{
+			ID:    arg.ToEmployeeID,
+			Stock: employee2.Stock + arg.Amount,
+		})
+		if err != nil {
+			return err
+		}
 
 		return nil
 	})

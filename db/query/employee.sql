@@ -14,9 +14,14 @@ WHERE id = $1;
 SELECT * FROM employees
 WHERE id = $1 LIMIT 1;
 
+-- name: GetEmployeeForUpdate :one
+SELECT * FROM employees
+WHERE id = $1 LIMIT 1
+FOR NO KEY UPDATE;
+
 -- name: ListEmployees :many
 SELECT * FROM employees
-ORDER BY code
+ORDER BY code ASC
 LIMIT $1
 OFFSET $2;
 
