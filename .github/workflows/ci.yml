@@ -22,7 +22,7 @@ jobs:
         # Provide the password for postgres
         env:
           POSTGRES_USER: root 
-          POSTGRES_PASSWORD: secrect
+          POSTGRES_PASSWORD: secret
           POSTGRES_DB: hr_system 
         # Set health checks to wait until postgres has started
         options: >-
@@ -30,6 +30,9 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
+        # Maps tcp port 5432 on service container to the host
+        ports:
+          - 5432:5432
 
     steps:
     - uses: actions/checkout@v3
@@ -39,6 +42,12 @@ jobs:
       with:
         go-version-file: 'go.mod'
     - run: go version
+
+    - name: Install golang-migrate
+      run: |
+          curl -L https://github.com/golang-migrate/migrate/releases/download/v4.15.2/migrate.linux-amd64.tar.gz | tar xvz
+          sudo mv migrate /usr/bin/
+          which migrate
 
     - name: Run migrations
       run: make migrateup
