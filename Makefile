@@ -13,10 +13,16 @@ migratedown:
 postgres: 
 	docker run --name postgres_hr -p 5432:5432 -e POSTGRES_USER=root -e POSTGRES_PASSWORD=secret -d postgres:12-alpine
 
+server: 
+	go run main.go
+
+server-l:
+	watchexec -r -e go -- go run main.go
+
 sqlc:
 	sqlc generate
 
 test:
 	go test -v -cover ./...
 
-.PHONY: createdb dropdb  migrateup migratedown postgres sqlc test
+.PHONY: createdb dropdb  migrateup migratedown postgres server sqlc test
