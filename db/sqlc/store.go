@@ -6,22 +6,28 @@ import (
 	"fmt"
 )
 
-// 透過 Store 執行資料庫查詢及交易的函式
-type Store struct {
+// Store 介面提供執行資料庫操作所需函式
+type Store interface {
+	Querier
+	TransferTx(ctx context.Context, arg TransferTxParams) (TransferTxResult, error)
+}
+
+// 透過 SQLStore 執行資料庫查詢及交易的函式
+type SQLStore struct {
 	db *sql.DB
 	*Queries
 }
 
 // 透過 NewStore 建立新的 Store
-func NewStore(db *sql.DB) *Store {
-	return &Store{
+func NewStore(db *sql.DB) Store {
+	return &SQLStore{
 		db:      db,
 		Queries: New(db),
 	}
 }
 
 // execTx 在資料庫交易中執行函式
-func (store *Store) execTx(ctx context.Context, fn func(*Queries) error) error {
+func (store *SQLStore) execTx(ctx context.Context, fn func(*Queries) error) error {
 	// 先開啟交易，若交易發生錯誤，提前結束函式
 	tx, err := store.db.BeginTx(ctx, nil)
 	if err != nil {
@@ -62,7 +68,7 @@ type TransferTxResult struct {
 
 // TransferTx 用於將持股從某員工轉移至另一員工。
 // 此函式會使用單筆資料庫交易建立股票轉移記錄、員工持股增減記錄、員工持股餘額。
-func (store *Store) TransferTx(ctx context.Context, arg TransferTxParams) (TransferTxResult, error) {
+func (store *SQLStore) TransferTx(ctx context.Context, arg TransferTxParams) (TransferTxResult, error) {
 	var result TransferTxResult
 
 	err := store.execTx(ctx, func(q *Queries) error {
