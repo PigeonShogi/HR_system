@@ -2,6 +2,7 @@ package api
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
 	"net/http"
 
@@ -15,10 +16,13 @@ type createEmployeeRequest struct {
 	Identity string `json:"identity" binding:"oneof=employee HR-Admin"`
 }
 
+type getEmployeeRequest struct {
+	ID int32 `uri:"id" binding:"required,min=1"`
+}
+
 func (server *Server) createEmployee(ctx *gin.Context) {
 	var identityId int32
 	var req createEmployeeRequest
-	fmt.Printf("請求%v", req)
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		ctx.JSON(http.StatusBadRequest, errorResponse(err))
 		return
@@ -38,6 +42,27 @@ func (server *Server) createEmployee(ctx *gin.Context) {
 
 	employee, err := server.store.CreateEmployee(ctx, arg)
 	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		return
+	}
+
+	ctx.JSON(http.StatusOK, employee)
+}
+
+func (server *Server) getEmployee(ctx *gin.Context) {
+	var req getEmployeeRequest
+	if err := ctx.ShouldBindUri(&req); err != nil {
+		ctx.JSON(http.StatusBadRequest, errorResponse(err))
+		return
+	}
+
+	employee, err := server.store.GetEmployee(ctx, req.ID)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			ctx.JSON(http.StatusNotFound, errorResponse(err))
+			return
+		}
+
 		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
 		return
 	}

@@ -16,6 +16,9 @@ func NewServer(store *db.Store) *Server {
 	router := gin.Default()
 	server := &Server{store: store, router: router}
 
+	// 找出一筆 employees 的記錄
+	router.GET("/employees/:id", server.getEmployee)
+
 	// employees 建立新記錄
 	router.POST("/employees", server.createEmployee)
 
