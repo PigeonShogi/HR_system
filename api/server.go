@@ -19,6 +19,9 @@ func NewServer(store *db.Store) *Server {
 	// 找出一筆 employees 的記錄
 	router.GET("/employees/:id", server.getEmployee)
 
+	// 找出多筆 employees 的記錄
+	router.GET("/employees", server.listEmployee)
+
 	// employees 建立新記錄
 	router.POST("/employees", server.createEmployee)
 
