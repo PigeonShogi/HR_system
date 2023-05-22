@@ -12,6 +12,7 @@ type Querier interface {
 	AddEmployeeStock(ctx context.Context, arg AddEmployeeStockParams) (Employee, error)
 	CreateEmployee(ctx context.Context, arg CreateEmployeeParams) (Employee, error)
 	CreateEntry(ctx context.Context, arg CreateEntryParams) (Entry, error)
+	CreatePunch(ctx context.Context, arg CreatePunchParams) (Punch, error)
 	CreateTransfer(ctx context.Context, arg CreateTransferParams) (Transfer, error)
 	DeleteEmployeeById(ctx context.Context, id int32) error
 	GetEmployee(ctx context.Context, id int32) (Employee, error)
@@ -24,6 +25,7 @@ type Querier interface {
 	ListEntries(ctx context.Context, arg ListEntriesParams) ([]Entry, error)
 	ListTransfers(ctx context.Context, arg ListTransfersParams) ([]Transfer, error)
 	UpdateEmployeeWithStock(ctx context.Context, arg UpdateEmployeeWithStockParams) (Employee, error)
+	UpdatePunch(ctx context.Context, arg UpdatePunchParams) (Punch, error)
 }
 
 var _ Querier = (*Queries)(nil)

@@ -48,7 +48,7 @@ type Punch struct {
 }
 
 type Status struct {
-	ID   int16  `json:"id"`
+	ID   int32  `json:"id"`
 	Name string `json:"name"`
 }
 
