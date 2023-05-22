@@ -20,6 +20,7 @@ type Querier interface {
 	GetEmployeeFromIdentities(ctx context.Context) (Identity, error)
 	GetEntry(ctx context.Context, id int64) (Entry, error)
 	GetHrAdminFromIdentities(ctx context.Context) (Identity, error)
+	GetStatusByName(ctx context.Context, name string) (Status, error)
 	GetTransfer(ctx context.Context, id int64) (Transfer, error)
 	ListEmployees(ctx context.Context, arg ListEmployeesParams) ([]Employee, error)
 	ListEntries(ctx context.Context, arg ListEntriesParams) ([]Entry, error)
