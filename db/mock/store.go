@@ -80,6 +80,21 @@ func (mr *MockStoreMockRecorder) CreateEntry(arg0, arg1 interface{}) *gomock.Cal
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateEntry", reflect.TypeOf((*MockStore)(nil).CreateEntry), arg0, arg1)
 }
 
+// CreatePunch mocks base method.
+func (m *MockStore) CreatePunch(arg0 context.Context, arg1 db.CreatePunchParams) (db.Punch, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreatePunch", arg0, arg1)
+	ret0, _ := ret[0].(db.Punch)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CreatePunch indicates an expected call of CreatePunch.
+func (mr *MockStoreMockRecorder) CreatePunch(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreatePunch", reflect.TypeOf((*MockStore)(nil).CreatePunch), arg0, arg1)
+}
+
 // CreateTransfer mocks base method.
 func (m *MockStore) CreateTransfer(arg0 context.Context, arg1 db.CreateTransferParams) (db.Transfer, error) {
 	m.ctrl.T.Helper()
@@ -184,6 +199,21 @@ func (mr *MockStoreMockRecorder) GetHrAdminFromIdentities(arg0 interface{}) *gom
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetHrAdminFromIdentities", reflect.TypeOf((*MockStore)(nil).GetHrAdminFromIdentities), arg0)
 }
 
+// GetStatusByName mocks base method.
+func (m *MockStore) GetStatusByName(arg0 context.Context, arg1 string) (db.Status, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetStatusByName", arg0, arg1)
+	ret0, _ := ret[0].(db.Status)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetStatusByName indicates an expected call of GetStatusByName.
+func (mr *MockStoreMockRecorder) GetStatusByName(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetStatusByName", reflect.TypeOf((*MockStore)(nil).GetStatusByName), arg0, arg1)
+}
+
 // GetTransfer mocks base method.
 func (m *MockStore) GetTransfer(arg0 context.Context, arg1 int64) (db.Transfer, error) {
 	m.ctrl.T.Helper()
@@ -272,4 +302,19 @@ func (m *MockStore) UpdateEmployeeWithStock(arg0 context.Context, arg1 db.Update
 func (mr *MockStoreMockRecorder) UpdateEmployeeWithStock(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateEmployeeWithStock", reflect.TypeOf((*MockStore)(nil).UpdateEmployeeWithStock), arg0, arg1)
+}
+
+// UpdatePunch mocks base method.
+func (m *MockStore) UpdatePunch(arg0 context.Context, arg1 db.UpdatePunchParams) (db.Punch, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdatePunch", arg0, arg1)
+	ret0, _ := ret[0].(db.Punch)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// UpdatePunch indicates an expected call of UpdatePunch.
+func (mr *MockStoreMockRecorder) UpdatePunch(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdatePunch", reflect.TypeOf((*MockStore)(nil).UpdatePunch), arg0, arg1)
 }
