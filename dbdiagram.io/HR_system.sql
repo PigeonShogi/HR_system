@@ -25,7 +25,7 @@ CREATE TABLE "punches" (
 );
 
 CREATE TABLE "statuses" (
-  "id" smallint PRIMARY KEY,
+  "id" serial PRIMARY KEY,
   "name" varchar UNIQUE NOT NULL
 );
 
